@@ -1,0 +1,18 @@
+﻿<div class="row title-container">
+    <div class="col-md-12">
+        <span ng-click="back()" class="glyphicon glyphicon-arrow-left back-button"></span>
+        <h1 class="title">news settings</h1>
+        <div class="buttons">
+            <button type="button" ng-show="!published && !draft" class="btn btn-danger" ng-click="discard()">discard</button>
+            <button type="button" ng-disabled="published && !draft" class="btn btn-success" ng-click="publish()">save</button>
+        </div>
+    </div>
+</div>
+
+<hr />
+
+<div class="row" id="setting-article-template" data-scrollspy="article template">
+    <ctrl-select class="col-md-12" ng-model="settings.articleTemplate" ng-options="templates" ng-default="true" ng-value-field="id" ng-name-field="name" ng-label="article template"></ctrl-select>
+</div>
+
+<hr />
