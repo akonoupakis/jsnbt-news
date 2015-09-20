@@ -1,19 +1,24 @@
 ﻿;(function () {
     "use strict";
 
-    var NewsCategoryFormController = function ($scope, $rootScope, $location, $q) {
+    var NewsCategoryFormController = function ($scope, $rootScope, $location, $q, $data) {
         
         jsnbt.NodeFormControllerBase.apply(this, $scope.getBaseArguments($scope));
-
 
         $scope.values.articleTemplate = '';
         $scope.draftValues.articleTemplate = '';
 
         $scope.enqueue('load', function () {
+            var deferred = $q.defer();
+
             if (!$scope.isNew()) {
                 $scope.values.articleTemplate = $scope.node.content.articleTemplate ? ($scope.node.content.articleTemplate.value || '') : '';
                 $scope.draftValues.articleTemplate = $scope.node.content.articleTemplate ? ($scope.node.content.articleTemplate.value || '') : '';
             }
+
+            deferred.resolve();
+
+            return deferred.promise;
         });
 
         $scope.setSelectedArticleTemplate = function () {
@@ -68,9 +73,20 @@
         });
 
         $scope.enqueue('patch', function (node) {
+            var deferred = $q.defer();
+
+            if (!node.content.articleTemplate)
+                node.content.articleTemplate = {};
+
             node.content.articleTemplate.value = !node.content.articleTemplate.inherits ? $scope.values.articleTemplate : '';
+
+            deferred.resolve();
+
+            return deferred.promise;
         });
        
+        $scope.enqueue('set', $scope.setSelectedArticleTemplate);
+
         $scope.back = function () {
             if ($rootScope.location.previous) {
                 $location.previous($rootScope.location.previous);
@@ -85,6 +101,6 @@
     NewsCategoryFormController.prototype = Object.create(jsnbt.NodeFormControllerBase.prototype);
 
     angular.module("jsnbt-news")
-        .controller('NewsCategoryFormController', ['$scope', '$rootScope', '$location', '$q', NewsCategoryFormController]);
+        .controller('NewsCategoryFormController', ['$scope', '$rootScope', '$location', '$q', '$data', NewsCategoryFormController]);
 
 })();

@@ -21,6 +21,8 @@ module.exports = {
         allowed: [],
         treeNode: false,
         properties: {
+            title: false,
+            parent: false,
             template: false,
             active: false,
             layout: false,
@@ -37,6 +39,15 @@ module.exports = {
         events: {
             validate: fs.readFileSync(__dirname + "/collections/nodes/validate.js", "utf8")
         }
+    }],
+
+    content: [{
+        id: 'news',
+        title: 'news',
+        subtitle: 'Lorem ipsum dolor sit amet',
+        body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam fringilla nunc vel cursus consequat. Pellentesque sit amet libero vel risus tristique euismod sed quis eros.',
+        image: 'img/news/icon.png',
+        url: '/modules/news'
     }],
 
     scripts: [{

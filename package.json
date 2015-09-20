@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "jsnbt-news",
   "version": "1.0.0",
   "description": "An articles addon for the jsnbt cms",
@@ -23,18 +23,28 @@
   "main": "src/app/index.js",
   "files": [
     "src/app/**",
-	"src/cfg/**",
+    "src/cfg/**",
     "src/web/admin/**",
-	"scripts/**"
+    "scripts/**"
   ],
   "scripts": {
     "install": "node scripts/install.js",
     "postuninstall": "node scripts/uninstall.js"
   },
   "dependencies": {
-  
+    "parseUri": "1.2.3-2",
+    "underscore": "1.6.0"
   },
   "devDependencies": {
-  
+    "grunt": "*",
+    "grunt-contrib-clean": "*",
+    "grunt-contrib-uglify": "*",
+    "grunt-contrib-jshint": "*",
+    "grunt-contrib-watch": "*",
+    "grunt-contrib-less": "*",
+    "grunt-contrib-cssmin": "*",
+    "grunt-contrib-copy": "*",
+    "grunt-preprocess": "*",
+    "grunt-env": "*"
   }
 }

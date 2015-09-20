@@ -12,7 +12,7 @@
     <div class="col-md-12">
         <ctrl-grid class="table-striped" ng-model="data" ng-fn="gridFn">
             <ctrl-grid-header>
-                <ctrl-grid-header-column>name</ctrl-grid-header-column>
+                <ctrl-grid-header-column>title</ctrl-grid-header-column>
                 <ctrl-grid-header-column></ctrl-grid-header-column>
             </ctrl-grid-header>
             <ctrl-grid-footer>
@@ -21,7 +21,7 @@
             </ctrl-grid-footer>
             <ctrl-grid-body>
                 <ctrl-grid-column>
-                    {{ row.name }}
+                    {{ row.title[language] }}
                 </ctrl-grid-column>
                 <ctrl-grid-buttons-column>
                     <button class="btn btn-default glyphicon glyphicon-edit btn-sm" ng-click="fn.edit(row)" />
