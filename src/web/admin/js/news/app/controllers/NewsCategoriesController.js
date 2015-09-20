@@ -66,18 +66,49 @@
         };
 
         $scope.treeFn.delete = function (node) {
-            ModalService.open({
-                title: 'are you sure you want to permanently delete the node ' + node.name + '?',
-                controller: 'DeletePromptController',
-                template: 'tmpl/core/modals/deletePrompt.html'
-            }).then(function (result) {
-                if (result) {
-                    $data.nodes.del(node.id).then(function (nodeDeleteResults) {
-                        $scope.remove(node);
-                    }, function (nodeDeleteError) {
-                        deferred.reject(nodeDeleteError);
+            $data.nodes.get({
+                hierarchy: node.id,
+                id: {
+                    $ne: [node.id]
+                },
+                $limit: 1
+            }).then(function (nodes) {
+
+                if (nodes.length > 0) {
+
+                    ModalService.open({
+                        title: 'oops',
+                        message: 'This category is not empty and cannot be deleted',
+                        controller: 'ErrorPromptController',
+                        template: 'tmpl/core/modals/errorPrompt.html',
+                        btn: {
+                            ok: 'ok',
+                            cancel: false
+                        }
+                    }).then(function (result) {
+
+                    });
+
+                }
+                else {
+
+                    ModalService.open({
+                        title: 'are you sure you want to permanently delete the node ' + node.name + '?',
+                        controller: 'DeletePromptController',
+                        template: 'tmpl/core/modals/deletePrompt.html'
+                    }).then(function (result) {
+                        if (result) {
+                            $data.nodes.del(node.id).then(function (nodeDeleteResults) {
+                                $scope.remove(node);
+                            }, function (nodeDeleteError) {
+                                deferred.reject(nodeDeleteError);
+                            });
+                        }
                     });
                 }
+
+            }).catch(function (ex) {
+                deferred.reject(ex);
             });
         };
 
