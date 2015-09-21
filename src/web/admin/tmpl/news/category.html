@@ -1,37 +1,4 @@
-﻿<div class="row title-container">
-    <div class="col-md-12">
-        <span ng-click="back()" class="glyphicon glyphicon-arrow-left back-button"></span>
-        <h1 class="title">{{ title }}</h1>
-        <div class="buttons">
-            <button title="create new" class="btn btn-default glyphicon glyphicon-plus-sign" type="button" value="create" ng-disabled="!canCreate()" ng-click="create()"></button>
-        </div>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-md-12">
-        <ctrl-grid class="table-striped" ng-model="data" ng-fn="gridFn">
-            <ctrl-grid-header>
-                <ctrl-grid-header-column>date</ctrl-grid-header-column>
-                <ctrl-grid-header-column>title</ctrl-grid-header-column>
-                <ctrl-grid-header-column></ctrl-grid-header-column>
-            </ctrl-grid-header>
-            <ctrl-grid-footer>
-                <ctrl-grid-infinite-scroll></ctrl-grid-infinite-scroll>
-                <ctrl-grid-empty>{{ text.empty }}</ctrl-grid-empty>
-            </ctrl-grid-footer>
-            <ctrl-grid-body>
-                <ctrl-grid-column>
-                    {{ row.content.date | date:'DD/MM/YYYY' }}
-                </ctrl-grid-column>
-                <ctrl-grid-column>
-                    {{ row.title[language] }}
-                </ctrl-grid-column>
-                <ctrl-grid-buttons-column>
-                    <button class="btn btn-default glyphicon glyphicon-edit btn-sm" ng-click="fn.edit(row)" />
-                    <button class="btn btn-default glyphicon glyphicon-remove btn-sm" ng-click="fn.delete(row)" />
-                </ctrl-grid-buttons-column>
-            </ctrl-grid-body>
-        </ctrl-grid>
-    </div>
+﻿<div class="row" id="page-content-article-template" data-scrollspy="article template">
+    <ctrl-select class="col-md-10" ng-model="values.articleTemplate" ng-options="templates['article']" ng-disabled="node.content.articleTemplate.inherits" ng-required="true" ng-default="true" ng-value-field="id" ng-name-field="name" ng-label="article template"></ctrl-select>
+    <ctrl-check class="col-md-2" ng-model="node.content.articleTemplate.inherits" ng-label="inheritance"></ctrl-check>
 </div>

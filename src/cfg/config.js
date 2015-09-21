@@ -47,18 +47,18 @@ module.exports = {
         subtitle: 'Lorem ipsum dolor sit amet',
         body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam fringilla nunc vel cursus consequat. Pellentesque sit amet libero vel risus tristique euismod sed quis eros.',
         image: 'img/news/icon.png',
-        url: '/modules/news'
+        url: '/content/news'
     }],
 
     scripts: [{
         name: 'admin-app',
         items: [
             '/admin/js/news/app/main.js',
-            '/admin/js/news/app/controllers/NewsCategoriesController.js',
-            '/admin/js/news/app/controllers/NewsCategoryController.js',
-            '/admin/js/news/app/controllers/NewsCategoryFormController.js',
-            '/admin/js/news/app/controllers/NewsArticleFormController.js',
-            '/admin/js/news/app/controllers/NewsSettingsController.js'
+            '/admin/js/news/app/controllers/CategoriesController.js',
+            '/admin/js/news/app/controllers/ArticlesController.js',
+            '/admin/js/news/app/controllers/CategoryController.js',
+            '/admin/js/news/app/controllers/ArticleController.js',
+            '/admin/js/news/app/controllers/SettingsController.js'
         ]
     }]
 

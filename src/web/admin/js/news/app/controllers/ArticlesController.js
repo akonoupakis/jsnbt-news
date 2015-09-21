@@ -1,12 +1,14 @@
 ﻿;(function () {
     "use strict";
 
-    var NewsCategoryController = function ($scope, $rootScope, $routeParams, $location, $q, $logger, $data, LocationService, PagedDataService, ModalService) {
+    var NewsArticlesController = function ($scope, $route, $rootScope, $routeParams, $location, $q, $logger, $data, $jsnbt, LocationService, PagedDataService, ModalService) {
         jsnbt.ListControllerBase.apply(this, $scope.getBaseArguments($scope));
 
         $scope.id = $routeParams.id;
         $scope.parent = undefined;
-
+        $scope.prefix = $route.current.$$route.location ? $route.current.$$route.location.prefix : undefined;
+        $scope.offset = _.str.trim($scope.prefix || '', '/').split('/').length;
+        
         $scope.title = '';
 
         $scope.load = function () {
@@ -15,7 +17,7 @@
                 var deferred = $q.defer();
 
                 $data.nodes.get($scope.id).then(function (response) {
-                    $scope.parent = response;
+                    $scope.parent = response;                    
                     deferred.resolve(response);
                 }, function (error) {
                     deferred.reject(error);
@@ -31,7 +33,7 @@
                     parent: $scope.id,
                     entity: 'article',
                     $sort: {
-                        name: 1
+                        'content.date': -1
                     }
                 }).then(function (response) {
                     deferred.resolve(response);
@@ -55,20 +57,33 @@
             return d.promise;
         };
 
+        var setLocationFn = $scope.setLocation;
         $scope.setLocation = function () {
-            var breadcrumb = LocationService.getBreadcrumb();
+            var deferred = $q.defer();
 
-            if ($scope.parent) {
-                breadcrumb = breadcrumb.slice(0, breadcrumb.length - 1);
-            }
+            setLocationFn.apply(this, arguments).then(function (response) {
+                $scope.getNodeBreadcrumb($scope.parent, $scope.prefix).then(function (bc) {
 
-            $scope.getNodeBreadcrumb($scope.parent).then(function (bc) {
-                var newBreadcrumb = _.map(bc, function (x) { x.url = '/modules/news' + x.url; return x; });
-                
-                $scope.current.setBreadcrumb(_.union(breadcrumb, newBreadcrumb));
-            }, function (ex) {
-                throw ex;
+                    var offset = $scope.offset;
+                    if ($scope.prefix === '/content/nodes/news' && $scope.offset === 3)
+                        offset--;
+                    
+                    response.splice(offset);
+
+                    _.each(bc, function (c) {
+                        response.push(c);
+                    });
+
+                    deferred.resolve(response);
+
+                }, function (ex) {
+                    deferred.reject(ex);
+                });
+            }).catch(function (ex) {
+                deferred.reject(ex);
             });
+
+            return deferred.promise;
         };
 
         $scope.back = function () {
@@ -76,7 +91,7 @@
                 $location.previous($rootScope.location.previous);
             }
             else {
-                $location.previous('/modules/news');
+                $location.previous($location.previous($scope.current.breadcrumb[$scope.current.breadcrumb.length - 2].url));
             }
         };
 
@@ -85,21 +100,23 @@
         };
 
         $scope.create = function () {
-            $location.next('/modules/news/article/new-' + $scope.parent.id);
+            var url = $jsnbt.entities['article'].getCreateUrl($scope.parent, $scope.prefix);
+            $location.next(url);
         };
 
-        $scope.$watch('parent.name', function () {
+        $scope.$watch('parent.title', function () {
             if (!$scope.parent)
                 return;
 
-            $scope.title = 'news: ' + $scope.parent.name;
+            $scope.title = $scope.parent.title[$scope.defaults.language];
             $scope.setLocation();
         });
 
         $scope.gridFn = {
 
             edit: function (article) {
-                $location.next('/modules/news/article/' + article.id);
+                var url = $jsnbt.entities[article.entity].getEditUrl(article, $scope.prefix);
+                $location.next(url);
             },
 
             delete: function (article) {
@@ -140,8 +157,8 @@
         $scope.init();
 
     };
-    NewsCategoryController.prototype = Object.create(jsnbt.ListControllerBase.prototype);
+    NewsArticlesController.prototype = Object.create(jsnbt.ListControllerBase.prototype);
 
     angular.module("jsnbt-news")
-        .controller('NewsCategoryController', ['$scope', '$rootScope', '$routeParams', '$location', '$q', '$logger', '$data', 'LocationService', 'PagedDataService', 'ModalService', NewsCategoryController]);
+        .controller('NewsArticlesController', ['$scope', '$route', '$rootScope', '$routeParams', '$location', '$q', '$logger', '$data', '$jsnbt', 'LocationService', 'PagedDataService', 'ModalService', NewsArticlesController]);
 })();

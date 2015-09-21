@@ -4,19 +4,36 @@
     for (var entityName in jsnbt.entities) {
         var articleListEntity = jsnbt.entities['articleList'];
 
+        var _prefix = '/modules/news';
+
         articleListEntity.editable = true;
         articleListEntity.viewable = true;
         articleListEntity.deletable = true;
         articleListEntity.parentable = true;
 
-        articleListEntity.getCreateUrl = function (node) {
-            return '/modules/news/category/new' + (node ? '-' + node.id : '');
+        articleListEntity.getCreateUrl = function (node, prefix) {
+            var prfx = prefix || _prefix;
+
+            if (prfx === '/content/nodes')
+                prfx += '/news';
+
+            return prfx + '/category/new' + (node ? '-' + node.id : '');
         };
-        articleListEntity.getEditUrl = function (node) {
-            return '/modules/news/category/' + node.id;
+        articleListEntity.getEditUrl = function (node, prefix) {
+            var prfx = prefix || _prefix;
+
+            if (prfx === '/content/nodes')
+                prfx += '/news';
+
+            return prfx + '/category/' + node.id;
         };
-        articleListEntity.getViewUrl = function (node) {
-            return '/modules/news/' + node.id;
+        articleListEntity.getViewUrl = function (node, prefix) {
+            var prfx = prefix || _prefix;
+
+            if (prfx === '/content/nodes')
+                prfx += '/news';
+
+            return prfx + '/articles/' + node.id;
         };
 
         var articleEntity = jsnbt.entities['article'];
@@ -26,11 +43,13 @@
         articleEntity.deletable = true;
         articleEntity.parentable = true;
 
-        articleEntity.getCreateUrl = function (node) {
-            return '/modules/news/article/new-' + node.id;
+        articleEntity.getCreateUrl = function (node, prefix) {
+            var prfx = prefix || _prefix;
+            return prfx + '/article/new-' + node.id;
         };
-        articleEntity.getEditUrl = function (node) {
-            return '/modules/news/article/' + node.id;
+        articleEntity.getEditUrl = function (node, prefix) {
+            var prfx = prefix || _prefix;
+            return prfx + '/article/' + node.id;
         };
         articleEntity.getViewUrl = function (node) {
             throw new Error('na');
@@ -43,51 +62,142 @@
 
             var router = angular.getRouter($routeProvider);
 
-            router
-                .when('/modules/news', {
+            var getCategoriesOptions = function (definition) {
+
+                var obj = {};
+                $.extend(true, obj, {
                     domain: 'news',
                     section: 'news',
                     controller: 'NewsCategoriesController',
                     baseTemplateUrl: 'tmpl/core/base/list.html',
                     templateUrl: 'tmpl/news/categories.html',
                     entities: ['articleList'],
-                    cacheKey: 'content:news:nodes'
-                })
-                .when('/modules/news/settings', {
+                    cacheKey: 'content:news:nodes',
+                    location: {
+                        prefix: '/modules/news'
+                    }
+                }, definition);
+
+                return obj;
+            };
+
+            var getSettingsOptions = function (definition) {
+
+                var obj = {};
+                $.extend(true, obj, {
                     controller: 'NewsSettingsController',
                     baseTemplateUrl: 'tmpl/core/base/settings.html',
-                    templateUrl: 'tmpl/news/settingsForm.html',
+                    templateUrl: 'tmpl/news/settings.html',
                     section: 'news',
-                    domain: 'news'
-                })
-                .when('/modules/news/category', {
-                    redirectTo: '/modules/news'
-                })
-                .when('/modules/news/category/:id', {
-                    controller: 'NewsCategoryFormController',
+                    domain: 'news',
+                    location: {
+                        prefix: '/modules/news'
+                    }
+                }, definition);
+
+                return obj;
+            };
+
+            var getArticlesOptions = function (definition) {
+
+                var obj = {};
+                $.extend(true, obj, {
+                    baseTemplateUrl: 'tmpl/core/base/list.html',
+                    templateUrl: 'tmpl/news/articles.html',
+                    controller: 'NewsArticlesController',
+                    location: {
+                        prefix: '/modules/news'
+                    }
+                }, definition);
+
+                return obj;
+            };
+
+            var getCategoryOptions = function (definition) {
+
+                var obj = {};
+                $.extend(true, obj, {
+                    controller: 'NewsCategoryController',
                     baseTemplateUrl: 'tmpl/core/base/node.html',
-                    templateUrl: 'tmpl/news/categoryForm.html',
+                    templateUrl: 'tmpl/news/category.html',
                     section: 'news',
                     domain: 'news',
                     entity: 'articleList',
-                    location: { offset: 2 }
-                })
-                .when('/modules/news/article', {
-                    redirectTo: '/modules/news'
-                })
-                .when('/modules/news/article/:id', {
-                    controller: 'NewsArticleFormController',
+                    location: {
+                        prefix: '/modules/news'
+                    }
+                }, definition);
+
+                return obj;
+            };
+
+            var getArticleOptions = function (definition) {
+
+                var obj = {};
+                $.extend(true, obj, {
+                    controller: 'NewsArticleController',
                     baseTemplateUrl: 'tmpl/core/base/node.html',
-                    templateUrl: 'tmpl/news/articleForm.html',
+                    templateUrl: 'tmpl/news/article.html',
                     section: 'news',
                     domain: 'news',
                     entity: 'article',
-                    location: { offset: 2 }
-                })
-                .when('/modules/news/:id', {
-                    baseTemplateUrl: 'tmpl/core/base/list.html',
-                    templateUrl: 'tmpl/news/category.html',
-                    controller: 'NewsCategoryController'
-                });
+                    location: {
+                        prefix: '/modules/news'
+                    }
+                }, definition);
+
+                return obj;
+            };
+
+            router
+                .when('/modules/news', getCategoriesOptions())
+                .when('/content/news', getCategoriesOptions({
+                    location: {
+                        prefix: '/content/news'
+                    }
+                }))
+
+                .when('/modules/news/settings', getSettingsOptions())
+                .when('/content/news/settings', getSettingsOptions({
+                    location: {
+                        prefix: '/content/news'
+                    }
+                }))
+
+                .when('/modules/news/articles/:id', getArticlesOptions())
+                .when('/content/news/articles/:id', getArticlesOptions({
+                    location: {
+                        prefix: '/content/news'
+                    }
+                }))
+                .when('/content/nodes/news/articles/:id', getArticlesOptions({
+                    location: {
+                        prefix: '/content/nodes/news'
+                    }
+                }))
+
+                .when('/modules/news/category/:id', getCategoryOptions())
+                .when('/content/news/category/:id', getCategoryOptions({
+                    location: {
+                        prefix: '/content/news'
+                    }
+                }))
+                .when('/content/nodes/news/category/:id', getCategoryOptions({
+                    location: {
+                        prefix: '/content/nodes/news'
+                    }
+                }))
+
+                .when('/modules/news/article/:id', getArticleOptions())
+                .when('/content/news/article/:id', getArticleOptions({
+                    location: {
+                        prefix: '/content/news'
+                    }
+                }))
+                .when('/content/nodes/news/article/:id', getArticleOptions({
+                    location: {
+                        prefix: '/content/nodes/news'
+                    }
+                }));
         }]);
 })();

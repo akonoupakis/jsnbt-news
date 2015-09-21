@@ -1,11 +1,13 @@
 ﻿;(function () {
     "use strict";
     
-    jsnbt.NewsCategoriesController = function ($scope, $rootScope, $location, $data, ModalService) {
+    jsnbt.NewsCategoriesController = function ($scope, $route, $rootScope, $location, $data, $jsnbt, ModalService) {
         jsnbt.TreeControllerBase.apply(this, $scope.getBaseArguments($scope));
         
+        $scope.prefix = $route.current.$$route.location ? $route.current.$$route.location.prefix : undefined;
+
         $scope.back = function () {
-            $location.previous('/modules');
+            $location.previous($scope.current.breadcrumb[0].url);
         };
 
         $scope.canViewSettings = function () {
@@ -14,7 +16,7 @@
 
 
         $scope.viewSettings = function () {
-            $location.next('/modules/news/settings');
+            $location.next($scope.prefix + '/settings');
         };
 
         $scope.canCreate = function () {
@@ -23,7 +25,8 @@
 
 
         $scope.create = function (node) {
-            $location.next('/modules/news/category/new');
+            var url = $jsnbt.entities['articleList'].getCreateUrl(node, $scope.prefix);
+            $location.next(url);
         };
 
         $scope.treeFn.canOpen = function (node) {
@@ -31,7 +34,8 @@
         };
 
         $scope.treeFn.open = function (node) {
-            $location.next('/modules/news/' + node.id);
+            var url = $jsnbt.entities[node.entity].getViewUrl(node, $scope.prefix);
+            $location.next(url);
         };
 
         $scope.treeFn.canCreate = function (node) {
@@ -39,7 +43,8 @@
         };
 
         $scope.treeFn.create = function (node) {
-            $location.next('/modules/news/category/new-' + node.id);
+            var url = $jsnbt.entities['articleList'].getCreateUrl(node, $scope.prefix);
+            $location.next(url);
         };
 
         $scope.treeFn.canEdit = function (node) {
@@ -47,22 +52,12 @@
         };
 
         $scope.treeFn.edit = function (node) {
-            var url = '';
-
-            switch (node.entity) {
-                case "articleList":
-                    url = '/modules/news/category/' + node.id;
-                    break;
-                case "article":
-                    url = '/modules/news/article/' + node.id;
-                    break;
-            }
-
+            var url = $jsnbt.entities[node.entity].getViewUrl(node, $scope.prefix);
             $location.next(url);
         };
 
         $scope.treeFn.canDelete = function (node) {
-            return node.childCount === 0;
+            return true;
         };
 
         $scope.treeFn.delete = function (node) {
@@ -86,7 +81,7 @@
                             cancel: false
                         }
                     }).then(function (result) {
-
+                       
                     });
 
                 }
@@ -118,5 +113,5 @@
     jsnbt.NewsCategoriesController.prototype = Object.create(jsnbt.TreeControllerBase.prototype);
 
     angular.module("jsnbt-news")
-        .controller('NewsCategoriesController', ['$scope', '$rootScope', '$location', '$data', 'ModalService', jsnbt.NewsCategoriesController]);
+        .controller('NewsCategoriesController', ['$scope', '$route', '$rootScope', '$location', '$data', '$jsnbt', 'ModalService', jsnbt.NewsCategoriesController]);
 })();

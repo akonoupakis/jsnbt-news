@@ -1,11 +1,13 @@
 ﻿;(function () {
     "use strict";
 
-    var NewsSettingsController = function ($scope, $location, $jsnbt) {
+    var NewsSettingsController = function ($scope, $route, $location, $jsnbt) {
         jsnbt.SettingsControllerBase.apply(this, $scope.getBaseArguments($scope));
 
+        $scope.prefix = $route.current.$$route.location ? $route.current.$$route.location.prefix : undefined;
+
         $scope.back = function () {
-            $location.previous('/modules/news');
+            $location.previous($scope.prefix);
         };
 
         $scope.templates = [];
@@ -17,8 +19,6 @@
 
             var tmpl = {};
             $.extend(true, tmpl, template);
-
-            var include = false;
 
             if (tmpl.restricted) {
                 if (tmpl.restricted.indexOf(entityName) !== -1) {
@@ -35,6 +35,6 @@
     NewsSettingsController.prototype = Object.create(jsnbt.SettingsControllerBase.prototype);
 
     angular.module("jsnbt-news")
-        .controller('NewsSettingsController', ['$scope', '$location', '$jsnbt', NewsSettingsController]);
+        .controller('NewsSettingsController', ['$scope', '$route', '$location', '$jsnbt', NewsSettingsController]);
 
 })();

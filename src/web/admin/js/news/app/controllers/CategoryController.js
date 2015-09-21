@@ -1,10 +1,12 @@
 ﻿;(function () {
     "use strict";
 
-    var NewsCategoryFormController = function ($scope, $rootScope, $location, $q, $data) {
-        
+    var NewsCategoryController = function ($scope, $route, $rootScope, $location, $q, $data) {
         jsnbt.NodeFormControllerBase.apply(this, $scope.getBaseArguments($scope));
 
+        $scope.prefix = $route.current.$$route.location ? $route.current.$$route.location.prefix : undefined;
+        $scope.offset = _.str.trim($scope.prefix || '', '/').split('/').length;
+        
         $scope.values.articleTemplate = '';
         $scope.draftValues.articleTemplate = '';
 
@@ -21,8 +23,47 @@
             return deferred.promise;
         });
 
+        var setLocationFn = $scope.setLocation;
+        $scope.setLocation = function () {
+            var deferred = $q.defer();
+
+            setLocationFn.apply(this, arguments).then(function (response) {
+                $scope.getNodeBreadcrumb($scope.isNew() ? { id: 'new', parent: $scope.id.substring(4) } : $scope.node, $scope.prefix).then(function (bc) {
+
+                    var offset = $scope.offset;
+                    var remaining = 1;
+                    if ($scope.prefix === '/content/nodes/news' && $scope.offset === 3) {
+                        offset--;
+                        remaining++;
+                    }
+
+                    response.splice(offset);
+
+                    _.each(bc, function (c) {
+                        response.push(c);
+                    });
+
+                    deferred.resolve(response);
+
+                }, function (ex) {
+                    deferred.reject(ex);
+                });
+            }).catch(function (ex) {
+                deferred.reject(ex);
+            });
+
+            return deferred.promise;
+        };
+
         $scope.setSelectedArticleTemplate = function () {
             var deferred = $q.defer();
+
+            if (!$scope.node.content.articleTemplate) {
+                $scope.node.content.articleTemplate = {
+                    value: '',
+                    inherits: false
+                }
+            }
 
             if ($scope.node.content.articleTemplate.inherits) {
                 $scope.draftValues.articleTemplate = $scope.values.articleTemplate;
@@ -87,20 +128,20 @@
        
         $scope.enqueue('set', $scope.setSelectedArticleTemplate);
 
-        $scope.back = function () {
+        $scope.back = function () {            
             if ($rootScope.location.previous) {
                 $location.previous($rootScope.location.previous);
             }
             else {
-                $location.previous('/modules/news');
+                $location.previous($location.previous($scope.current.breadcrumb[$scope.current.breadcrumb.length - 2].url));
             }
         };
 
         $scope.init();
     };
-    NewsCategoryFormController.prototype = Object.create(jsnbt.NodeFormControllerBase.prototype);
+    NewsCategoryController.prototype = Object.create(jsnbt.NodeFormControllerBase.prototype);
 
     angular.module("jsnbt-news")
-        .controller('NewsCategoryFormController', ['$scope', '$rootScope', '$location', '$q', '$data', NewsCategoryFormController]);
+        .controller('NewsCategoryController', ['$scope', '$route', '$rootScope', '$location', '$q', '$data', NewsCategoryController]);
 
 })();
