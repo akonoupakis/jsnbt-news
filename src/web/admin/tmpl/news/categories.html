@@ -4,7 +4,7 @@
         <h1 class="title">news</h1>
         <div class="buttons">
             <button title="create new" class="btn btn-default glyphicon glyphicon-plus-sign" type="button" value="create" ng-disabled="!canCreate()" ng-click="create()"></button>
-            <button title="create new" class="btn btn-default glyphicon glyphicon-cog" type="button" value="create" ng-disabled="!canViewSettings()" ng-click="viewSettings()"></button>
+            <button title="settings" class="btn btn-default glyphicon glyphicon-cog" type="button" value="create" ng-show="canViewSettings()" ng-click="viewSettings()"></button>
         </div>
     </div>
 </div>

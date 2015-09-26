@@ -127,16 +127,7 @@
         });
        
         $scope.enqueue('set', $scope.setSelectedArticleTemplate);
-
-        $scope.back = function () {            
-            if ($rootScope.location.previous) {
-                $location.previous($rootScope.location.previous);
-            }
-            else {
-                $location.previous($location.previous($scope.current.breadcrumb[$scope.current.breadcrumb.length - 2].url));
-            }
-        };
-
+        
         $scope.init();
     };
     NewsCategoryController.prototype = Object.create(jsnbt.NodeFormControllerBase.prototype);

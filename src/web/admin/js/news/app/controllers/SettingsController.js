@@ -4,10 +4,8 @@
     var NewsSettingsController = function ($scope, $route, $location, $jsnbt) {
         jsnbt.SettingsControllerBase.apply(this, $scope.getBaseArguments($scope));
 
-        $scope.prefix = $route.current.$$route.location ? $route.current.$$route.location.prefix : undefined;
-
         $scope.back = function () {
-            $location.previous($scope.prefix);
+            $location.previous('/modules/news');
         };
 
         $scope.templates = [];

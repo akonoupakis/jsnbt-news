@@ -78,14 +78,14 @@
                     $scope.imageSize.gallery.height = typeof (settings.data.imageGalleryHeight) === 'number' ? settings.data.imageGalleryHeight : undefined;
                     $scope.imageSize.gallery.width = typeof (settings.data.imageGalleryWidth) === 'number' ? settings.data.imageGalleryWidth : undefined;
 
-                    if($scope.imageSize.teaser.height && $scope.imageSize.teaser.width)
-                        $scope.imageTip.teaser = $scope.imageSize.teaser.height + 'x' + $scope.imageSize.teaser.width
+                    if ($scope.imageSize.teaser.height && $scope.imageSize.teaser.width)
+                        $scope.imageTip.teaser = $scope.imageSize.teaser.height + 'x' + $scope.imageSize.teaser.width;
 
                     if ($scope.imageSize.body.height && $scope.imageSize.body.width)
-                        $scope.imageTip.body = $scope.imageSize.body.height + 'x' + $scope.imageSize.body.width
+                        $scope.imageTip.body = $scope.imageSize.body.height + 'x' + $scope.imageSize.body.width;
 
                     if ($scope.imageSize.gallery.height && $scope.imageSize.gallery.width)
-                        $scope.imageTip.gallery = $scope.imageSize.gallery.height + 'x' + $scope.imageSize.gallery.width
+                        $scope.imageTip.gallery = $scope.imageSize.gallery.height + 'x' + $scope.imageSize.gallery.width;
                 }
 
                 deferred.resolve();
@@ -95,15 +95,6 @@
 
             return deferred.promise;
         });
-
-        $scope.back = function () {
-            if ($rootScope.location.previous) {
-                $location.previous($rootScope.location.previous);
-            }
-            else {
-                $location.previous($location.previous($scope.current.breadcrumb[$scope.current.breadcrumb.length - 2].url));
-            }
-        };
 
         $scope.init();
     };

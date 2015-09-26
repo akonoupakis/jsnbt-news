@@ -4,11 +4,9 @@
     
     <ctrl-check class="col-md-2" ng-model="node.active[language]" ng-label="active"></ctrl-check>
 </div>
-<div id="page-content-images" data-scrollspy="images">
-    <div class="row">
-        <ctrl-image class="col-md-6" ng-model="node.content.teaserImage" ng-height="imageSize.teaser.height" ng-width="imageSize.teaser.width" ng-tip="{{imageTip.teaser}}" ng-required="true" ng-label="teaser image"></ctrl-image>
-        <ctrl-image class="col-md-6" ng-model="node.content.image" ng-height="imageSize.gallery.height" ng-width="imageSize.gallery.width" ng-tip="{{imageTip.body}}" ng-required="true" ng-label="body image"></ctrl-image>
-    </div>
+<div class="row" id="page-content-images" data-scrollspy="images">
+    <ctrl-image class="col-md-6" ng-model="node.content.teaserImage" ng-height="imageSize.teaser.height" ng-width="imageSize.teaser.width" ng-tip="{{imageTip.teaser}}" ng-required="true" ng-label="teaser image"></ctrl-image>
+    <ctrl-image class="col-md-6" ng-model="node.content.image" ng-height="imageSize.body.height" ng-width="imageSize.body.width" ng-tip="{{imageTip.body}}" ng-required="true" ng-label="body image"></ctrl-image>
 </div>
 <div class="row" id="page-content-teaser" data-scrollspy="teaser">
     <ctrl-text-area class="col-md-12" ng-model="node.content.localized[language].teaser" ng-validating="node.active[language]" ng-required="true" ng-rows="5" ng-label="teaser"></ctrl-text-area>

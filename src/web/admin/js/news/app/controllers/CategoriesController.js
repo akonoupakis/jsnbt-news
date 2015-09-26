@@ -6,17 +6,13 @@
         
         $scope.prefix = $route.current.$$route.location ? $route.current.$$route.location.prefix : undefined;
 
-        $scope.back = function () {
-            $location.previous($scope.current.breadcrumb[0].url);
-        };
-
         $scope.canViewSettings = function () {
-            return true;
+            return $scope.prefix === '/modules/news';
         };
 
 
         $scope.viewSettings = function () {
-            $location.next($scope.prefix + '/settings');
+            $location.next('/modules/news/settings');
         };
 
         $scope.canCreate = function () {
@@ -24,8 +20,8 @@
         };
 
 
-        $scope.create = function (node) {
-            var url = $jsnbt.entities['articleList'].getCreateUrl(node, $scope.prefix);
+        $scope.create = function () {
+            var url = $jsnbt.entities['articleList'].getCreateUrl(undefined, $scope.prefix);
             $location.next(url);
         };
 
@@ -73,7 +69,7 @@
 
                     ModalService.open({
                         title: 'oops',
-                        message: 'This category is not empty and cannot be deleted',
+                        message: 'this category is not empty and cannot be deleted',
                         controller: 'ErrorPromptController',
                         template: 'tmpl/core/modals/errorPrompt.html',
                         btn: {
@@ -88,7 +84,7 @@
                 else {
 
                     ModalService.open({
-                        title: 'are you sure you want to permanently delete the node ' + node.name + '?',
+                        title: 'are you sure you want to permanently delete the category ' + node.title[$scope.defaults.language] + '?',
                         controller: 'DeletePromptController',
                         template: 'tmpl/core/modals/deletePrompt.html'
                     }).then(function (result) {

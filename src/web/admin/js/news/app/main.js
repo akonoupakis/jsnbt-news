@@ -1,60 +1,58 @@
 ﻿; (function () {
     "use strict";
+    
+    var _prefix = '/modules/news';
 
-    for (var entityName in jsnbt.entities) {
-        var articleListEntity = jsnbt.entities['articleList'];
+    var articleListEntity = jsnbt.entities['articleList'];
 
-        var _prefix = '/modules/news';
+    articleListEntity.editable = true;
+    articleListEntity.viewable = true;
+    articleListEntity.deletable = true;
+    articleListEntity.parentable = true;
 
-        articleListEntity.editable = true;
-        articleListEntity.viewable = true;
-        articleListEntity.deletable = true;
-        articleListEntity.parentable = true;
+    articleListEntity.getCreateUrl = function (node, prefix) {
+        var prfx = prefix || _prefix;
 
-        articleListEntity.getCreateUrl = function (node, prefix) {
-            var prfx = prefix || _prefix;
+        if (prfx === '/content/nodes')
+            prfx += '/news';
 
-            if (prfx === '/content/nodes')
-                prfx += '/news';
+        return prfx + '/category/new' + (node ? '-' + node.id : '');
+    };
+    articleListEntity.getEditUrl = function (node, prefix) {
+        var prfx = prefix || _prefix;
 
-            return prfx + '/category/new' + (node ? '-' + node.id : '');
-        };
-        articleListEntity.getEditUrl = function (node, prefix) {
-            var prfx = prefix || _prefix;
+        if (prfx === '/content/nodes')
+            prfx += '/news';
 
-            if (prfx === '/content/nodes')
-                prfx += '/news';
+        return prfx + '/category/' + node.id;
+    };
+    articleListEntity.getViewUrl = function (node, prefix) {
+        var prfx = prefix || _prefix;
 
-            return prfx + '/category/' + node.id;
-        };
-        articleListEntity.getViewUrl = function (node, prefix) {
-            var prfx = prefix || _prefix;
+        if (prfx === '/content/nodes')
+            prfx += '/news';
 
-            if (prfx === '/content/nodes')
-                prfx += '/news';
+        return prfx + '/articles/' + node.id;
+    };
 
-            return prfx + '/articles/' + node.id;
-        };
+    var articleEntity = jsnbt.entities['article'];
 
-        var articleEntity = jsnbt.entities['article'];
+    articleEntity.editable = true;
+    articleEntity.viewable = false;
+    articleEntity.deletable = true;
+    articleEntity.parentable = true;
 
-        articleEntity.editable = true;
-        articleEntity.viewable = false;
-        articleEntity.deletable = true;
-        articleEntity.parentable = true;
-
-        articleEntity.getCreateUrl = function (node, prefix) {
-            var prfx = prefix || _prefix;
-            return prfx + '/article/new-' + node.id;
-        };
-        articleEntity.getEditUrl = function (node, prefix) {
-            var prfx = prefix || _prefix;
-            return prfx + '/article/' + node.id;
-        };
-        articleEntity.getViewUrl = function (node) {
-            throw new Error('na');
-        };
-    }
+    articleEntity.getCreateUrl = function (node, prefix) {
+        var prfx = prefix || _prefix;
+        return prfx + '/article/new-' + node.id;
+    };
+    articleEntity.getEditUrl = function (node, prefix) {
+        var prfx = prefix || _prefix;
+        return prfx + '/article/' + node.id;
+    };
+    articleEntity.getViewUrl = function (node) {
+        throw new Error('na');
+    };
 
     angular.module("jsnbt-news", ['ngRoute'])
     .config(['$routeProvider',
@@ -158,11 +156,6 @@
                 }))
 
                 .when('/modules/news/settings', getSettingsOptions())
-                .when('/content/news/settings', getSettingsOptions({
-                    location: {
-                        prefix: '/content/news'
-                    }
-                }))
 
                 .when('/modules/news/articles/:id', getArticlesOptions())
                 .when('/content/news/articles/:id', getArticlesOptions({

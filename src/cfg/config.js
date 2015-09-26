@@ -44,8 +44,7 @@ module.exports = {
     content: [{
         id: 'news',
         title: 'news',
-        subtitle: 'Lorem ipsum dolor sit amet',
-        body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam fringilla nunc vel cursus consequat. Pellentesque sit amet libero vel risus tristique euismod sed quis eros.',
+        body: 'articles and categories from the news module',
         image: 'img/news/icon.png',
         url: '/content/news'
     }],
