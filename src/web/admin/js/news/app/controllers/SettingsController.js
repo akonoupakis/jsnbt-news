@@ -1,12 +1,10 @@
 ﻿;(function () {
     "use strict";
 
-    var NewsSettingsController = function ($scope, $route, $location, $jsnbt) {
+    var NewsSettingsController = function ($scope, $route, $location, $jsnbt, $logger) {
         jsnbt.SettingsControllerBase.apply(this, $scope.getBaseArguments($scope));
 
-        $scope.back = function () {
-            $location.previous('/modules/news');
-        };
+        var logger = $logger.create('NewsSettingsController');
 
         $scope.templates = [];
 
@@ -28,11 +26,13 @@
             }
         }
 
-        $scope.init();
+        $scope.init().catch(function (ex) {
+            logger.error(ex);
+        });
     };
     NewsSettingsController.prototype = Object.create(jsnbt.SettingsControllerBase.prototype);
 
     angular.module("jsnbt-news")
-        .controller('NewsSettingsController', ['$scope', '$route', '$location', '$jsnbt', NewsSettingsController]);
+        .controller('NewsSettingsController', ['$scope', '$route', '$location', '$jsnbt', '$logger', NewsSettingsController]);
 
 })();

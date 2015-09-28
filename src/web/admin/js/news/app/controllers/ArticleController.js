@@ -1,11 +1,10 @@
 ﻿;(function () {
     "use strict";
 
-    var NewsArticleController = function ($scope, $route, $rootScope, $location, $q, $data) {
+    var NewsArticleController = function ($scope, $route, $rootScope, $location, $q, $data, $logger) {
         jsnbt.NodeFormControllerBase.apply(this, $scope.getBaseArguments($scope));
 
-        $scope.prefix = $route.current.$$route.location ? $route.current.$$route.location.prefix : undefined;
-        $scope.offset = _.str.trim($scope.prefix || '', '/').split('/').length;
+        var logger = $logger.create('NewsArticleController');
 
         $scope.imageSize = {
             teaser: {
@@ -28,48 +27,16 @@
             gallery: undefined
         };
 
-        var setLocationFn = $scope.setLocation;
-        $scope.setLocation = function () {
+        $scope.enqueue('preloading', function () {
             var deferred = $q.defer();
 
-            setLocationFn.apply(this, arguments).then(function (response) {
-                $scope.getNodeBreadcrumb($scope.isNew() ? { id: 'new', parent: $scope.id.substring(4) } : $scope.node, $scope.prefix).then(function (bc) {
-
-                    var offset = $scope.offset;
-                    var remaining = 1;
-                    if ($scope.prefix === '/content/nodes/news' && $scope.offset === 3) {
-                        offset--;
-                        remaining++;
-                    }
-
-                    response.splice(offset);
-
-                    _.each(bc, function (c) {
-                        response.push(c);
-                    });
-
-                    deferred.resolve(response);
-
-                }, function (ex) {
-                    deferred.reject(ex);
-                });
-            }).catch(function (ex) {
-                deferred.reject(ex);
-            });
-
-            return deferred.promise;
-        };
-
-        $scope.enqueue('preload', function () {
-            var deferred = $q.defer();
-            
             $data.settings.get({
                 domain: 'news'
             }).then(function (response) {
                 var settings = _.first(response);
 
                 if (settings) {
-                    $scope.imageSize.teaser.height = typeof(settings.data.imageTeaserHeight) === 'number' ? settings.data.imageTeaserHeight : undefined;
+                    $scope.imageSize.teaser.height = typeof (settings.data.imageTeaserHeight) === 'number' ? settings.data.imageTeaserHeight : undefined;
                     $scope.imageSize.teaser.width = typeof (settings.data.imageTeaserWidth) === 'number' ? settings.data.imageTeaserWidth : undefined;
 
                     $scope.imageSize.body.height = typeof (settings.data.imageBodyHeight) === 'number' ? settings.data.imageBodyHeight : undefined;
@@ -96,11 +63,45 @@
             return deferred.promise;
         });
 
-        $scope.init();
+        var getBreadcrumbFn = $scope.getBreadcrumb;
+        $scope.getBreadcrumb = function () {
+            var deferred = $q.defer();
+
+            getBreadcrumbFn().then(function (breadcrumb) {
+                $scope.getNodeBreadcrumb($scope.isNew() ? { id: 'new', parent: $scope.id.substring(4) } : $scope.node, $scope.prefix).then(function (bc) {
+
+                    var offset = $scope.offset;
+                    var remaining = 1;
+                    if ($scope.prefix === '/content/nodes/news' && $scope.offset === 3) {
+                        offset--;
+                        remaining++;
+                    }
+
+                    breadcrumb.splice(offset);
+
+                    _.each(bc, function (c) {
+                        breadcrumb.push(c);
+                    });
+
+                    deferred.resolve(breadcrumb);
+
+                }, function (ex) {
+                    deferred.reject(ex);
+                });
+            }).catch(function (ex) {
+                deferred.reject(ex);
+            });
+
+            return deferred.promise;
+        };
+        
+        $scope.init().catch(function (ex) {
+            logger.error(ex);
+        });
     };
     NewsArticleController.prototype = Object.create(jsnbt.NodeFormControllerBase.prototype);
 
     angular.module("jsnbt-news")
-        .controller('NewsArticleController', ['$scope', '$route', '$rootScope', '$location', '$q', '$data', NewsArticleController]);
+        .controller('NewsArticleController', ['$scope', '$route', '$rootScope', '$location', '$q', '$data', '$logger', NewsArticleController]);
 
 })();

@@ -1,33 +1,19 @@
 ﻿;(function () {
     "use strict";
 
-    var NewsCategoryController = function ($scope, $route, $rootScope, $location, $q, $data) {
+    var NewsCategoryController = function ($scope, $route, $rootScope, $location, $q, $data, $logger) {
         jsnbt.NodeFormControllerBase.apply(this, $scope.getBaseArguments($scope));
 
-        $scope.prefix = $route.current.$$route.location ? $route.current.$$route.location.prefix : undefined;
-        $scope.offset = _.str.trim($scope.prefix || '', '/').split('/').length;
-        
+        var logger = $logger.create('NewsCategoryController');
+
         $scope.values.articleTemplate = '';
         $scope.draftValues.articleTemplate = '';
-
-        $scope.enqueue('load', function () {
+        
+        var getBreadcrumbFn = $scope.getBreadcrumb;
+        $scope.getBreadcrumb = function () {
             var deferred = $q.defer();
 
-            if (!$scope.isNew()) {
-                $scope.values.articleTemplate = $scope.node.content.articleTemplate ? ($scope.node.content.articleTemplate.value || '') : '';
-                $scope.draftValues.articleTemplate = $scope.node.content.articleTemplate ? ($scope.node.content.articleTemplate.value || '') : '';
-            }
-
-            deferred.resolve();
-
-            return deferred.promise;
-        });
-
-        var setLocationFn = $scope.setLocation;
-        $scope.setLocation = function () {
-            var deferred = $q.defer();
-
-            setLocationFn.apply(this, arguments).then(function (response) {
+            getBreadcrumbFn().then(function (breadcrumb) {
                 $scope.getNodeBreadcrumb($scope.isNew() ? { id: 'new', parent: $scope.id.substring(4) } : $scope.node, $scope.prefix).then(function (bc) {
 
                     var offset = $scope.offset;
@@ -37,13 +23,13 @@
                         remaining++;
                     }
 
-                    response.splice(offset);
+                    breadcrumb.splice(offset);
 
                     _.each(bc, function (c) {
-                        response.push(c);
+                        breadcrumb.push(c);
                     });
 
-                    deferred.resolve(response);
+                    deferred.resolve(breadcrumb);
 
                 }, function (ex) {
                     deferred.reject(ex);
@@ -93,27 +79,23 @@
 
             return deferred.promise;
         };
-        
-        $scope.$watch('node.content.articleTemplate.inherits', function (newValue, prevValue) {
-            if (newValue !== undefined && prevValue !== undefined) {
-                if (newValue === true) {
-                    $scope.setHierarchyNodes().then(function () {
-                        $scope.setSelectedArticleTemplate().catch(function (setEx) {
-                            logger.error(setEx);
-                        });
-                    }, function (ex) {
-                        logger.error(ex);
-                    });
-                }
-                else {
-                    $scope.setSelectedArticleTemplate().catch(function (setEx) {
-                        logger.error(setEx);
-                    });
-                }
+    
+        $scope.enqueue('set', function () {
+            var deferred = $q.defer();
+
+            if (!$scope.isNew()) {
+                $scope.values.articleTemplate = $scope.node.content.articleTemplate ? ($scope.node.content.articleTemplate.value || '') : '';
+                $scope.draftValues.articleTemplate = $scope.node.content.articleTemplate ? ($scope.node.content.articleTemplate.value || '') : '';
             }
+
+            deferred.resolve();
+
+            return deferred.promise;
         });
 
-        $scope.enqueue('patch', function (node) {
+        $scope.enqueue('set', $scope.setSelectedArticleTemplate);
+
+        $scope.enqueue('publishing', function (node) {
             var deferred = $q.defer();
 
             if (!node.content.articleTemplate)
@@ -125,14 +107,41 @@
 
             return deferred.promise;
         });
-       
-        $scope.enqueue('set', $scope.setSelectedArticleTemplate);
-        
-        $scope.init();
+               
+        $scope.enqueue('watch', function () {
+            var deferred = $q.defer();
+
+            $scope.$watch('node.content.articleTemplate.inherits', function (newValue, prevValue) {
+                if (newValue !== undefined && prevValue !== undefined) {
+                    if (newValue === true) {
+                        $scope.setHierarchyNodes().then(function () {
+                            $scope.setSelectedArticleTemplate().catch(function (setEx) {
+                                logger.error(setEx);
+                            });
+                        }, function (ex) {
+                            logger.error(ex);
+                        });
+                    }
+                    else {
+                        $scope.setSelectedArticleTemplate().catch(function (setEx) {
+                            logger.error(setEx);
+                        });
+                    }
+                }
+            });
+
+            deferred.resolve();
+
+            return deferred.promise;
+        });
+
+        $scope.init().catch(function (ex) {
+            logger.error(ex);
+        });
     };
     NewsCategoryController.prototype = Object.create(jsnbt.NodeFormControllerBase.prototype);
 
     angular.module("jsnbt-news")
-        .controller('NewsCategoryController', ['$scope', '$route', '$rootScope', '$location', '$q', '$data', NewsCategoryController]);
+        .controller('NewsCategoryController', ['$scope', '$route', '$rootScope', '$location', '$q', '$data', '$logger', NewsCategoryController]);
 
 })();

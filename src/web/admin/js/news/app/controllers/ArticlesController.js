@@ -4,64 +4,51 @@
     var NewsArticlesController = function ($scope, $route, $rootScope, $routeParams, $location, $q, $logger, $data, $jsnbt, LocationService, PagedDataService, ModalService) {
         jsnbt.ListControllerBase.apply(this, $scope.getBaseArguments($scope));
 
+        var logger = $logger.create('NewsArticlesController');
+
         $scope.id = $routeParams.id;
         $scope.parent = undefined;
-        $scope.prefix = $route.current.$$route.location ? $route.current.$$route.location.prefix : undefined;
-        $scope.offset = _.str.trim($scope.prefix || '', '/').split('/').length;
         
         $scope.title = '';
 
-        $scope.load = function () {
+        $scope.offset = _.str.trim($scope.prefix || '', '/').split('/').length;
 
-            var loadParent = function () {
-                var deferred = $q.defer();
-
-                $data.nodes.get($scope.id).then(function (response) {
-                    $scope.parent = response;                    
-                    deferred.resolve(response);
-                }, function (error) {
-                    deferred.reject(error);
-                });
-
-                return deferred.promise;
-            };
-
-            var loadData = function () {
-                var deferred = $q.defer();
-
-                PagedDataService.get(jsnbt.db.nodes.get, {
-                    parent: $scope.id,
-                    entity: 'article',
-                    $sort: {
-                        'content.date': -1
-                    }
-                }).then(function (response) {
-                    deferred.resolve(response);
-                }, function (error) {
-                    deferred.reject(error);
-                });
-
-                return deferred.promise;
-            };
-
-            var d = $q.defer();
-
-            $q.all([loadParent(), loadData()]).then(function (results) {
-                var parentResult = results[0];
-                var dataResults = results[1];
-                d.resolve(dataResults);
-            }, function (ex) {
-                d.reject(ex);
-            });
-
-            return d.promise;
-        };
-
-        var setLocationFn = $scope.setLocation;
-        $scope.setLocation = function () {
+        $scope.enqueue('loading', function () {
             var deferred = $q.defer();
 
-            setLocationFn.apply(this, arguments).then(function (response) {
+            $data.nodes.get($scope.id).then(function (response) {
+                $scope.parent = response;
+                deferred.resolve(response);
+            }, function (error) {
+                deferred.reject(error);
+            });
+
+            return deferred.promise;
+        });
+
+        $scope.load = function () {
+            var deferred = $q.defer();
+
+            PagedDataService.get(jsnbt.db.nodes.get, {
+                parent: $scope.id,
+                entity: 'article',
+                $sort: {
+                    'content.date': -1
+                }
+            }).then(function (response) {
+                deferred.resolve(response);
+            }, function (error) {
+                deferred.reject(error);
+            });
+
+            return deferred.promise;
+        };
+
+        var getBreadcrumbFn = $scope.getBreadcrumb;
+        $scope.getBreadcrumb = function () {
+            var deferred = $q.defer();
+
+            getBreadcrumbFn.apply(this, arguments).then(function (response) {
                 $scope.getNodeBreadcrumb($scope.parent, $scope.prefix).then(function (bc) {
 
                     var offset = $scope.offset;
@@ -86,6 +73,13 @@
             return deferred.promise;
         };
         
+        $scope.$watch('parent.title', function () {
+            if (!$scope.parent)
+                return;
+
+            $scope.title = $scope.parent.title[$scope.defaults.language];
+        });
+
         $scope.canCreate = function () {
             return true;
         };
@@ -94,15 +88,7 @@
             var url = $jsnbt.entities['article'].getCreateUrl($scope.parent, $scope.prefix);
             $location.next(url);
         };
-
-        $scope.$watch('parent.title', function () {
-            if (!$scope.parent)
-                return;
-
-            $scope.title = $scope.parent.title[$scope.defaults.language];
-            $scope.setLocation();
-        });
-
+        
         $scope.gridFn = {
 
             edit: function (article) {
@@ -145,7 +131,9 @@
 
         };
 
-        $scope.init();
+        $scope.init().catch(function (ex) {
+            logger.error(ex);
+        });
 
     };
     NewsArticlesController.prototype = Object.create(jsnbt.ListControllerBase.prototype);

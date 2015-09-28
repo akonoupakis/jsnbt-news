@@ -58,139 +58,114 @@
     .config(['$routeProvider',
         function ($routeProvider) {
 
-            var router = angular.getRouter($routeProvider);
+            var TEMPLATE_BASE = jsnbt.TEMPLATE_BASE;
 
-            var getCategoriesOptions = function (definition) {
+            var router = new jsnbt.router('news', $routeProvider);
 
-                var obj = {};
-                $.extend(true, obj, {
-                    domain: 'news',
-                    section: 'news',
-                    controller: 'NewsCategoriesController',
-                    baseTemplateUrl: 'tmpl/core/base/list.html',
-                    templateUrl: 'tmpl/news/categories.html',
-                    entities: ['articleList'],
-                    cacheKey: 'content:news:nodes',
-                    location: {
+            var routes = {
+                categories: function (x) {
+                    x.section('news');
+                    x.baseTemplate(TEMPLATE_BASE.list);
+                    x.template('tmpl/news/categories.html');
+                    x.scope({
+                        prefix: '/modules/news',
+                        entities: ['articleList'],
+                        cacheKey: 'content:news:nodes'
+                    });
+                    x.controller('NewsCategoriesController');
+                },
+                settings: function (x) {
+                    x.section('news');
+                    x.baseTemplate(TEMPLATE_BASE.settings);
+                    x.template('tmpl/news/settings.html');
+                    x.scope({
                         prefix: '/modules/news'
-                    }
-                }, definition);
-
-                return obj;
-            };
-
-            var getSettingsOptions = function (definition) {
-
-                var obj = {};
-                $.extend(true, obj, {
-                    controller: 'NewsSettingsController',
-                    baseTemplateUrl: 'tmpl/core/base/settings.html',
-                    templateUrl: 'tmpl/news/settings.html',
-                    section: 'news',
-                    domain: 'news',
-                    location: {
+                    });
+                    x.controller('NewsSettingsController');
+                },
+                articles: function (x) {
+                    x.section('news');
+                    x.baseTemplate(TEMPLATE_BASE.list);
+                    x.template('tmpl/news/articles.html');
+                    x.scope({
                         prefix: '/modules/news'
-                    }
-                }, definition);
-
-                return obj;
+                    });
+                    x.controller('NewsArticlesController');
+                },
+                category: function (x) {
+                    x.section('news');
+                    x.baseTemplate(TEMPLATE_BASE.nodeForm);
+                    x.template('tmpl/news/category.html');
+                    x.scope({
+                        prefix: '/modules/news',
+                        entity: 'articleList'
+                    });
+                    x.controller('NewsCategoryController');
+                },
+                article: function (x) {
+                    x.section('news');
+                    x.baseTemplate(TEMPLATE_BASE.nodeForm);
+                    x.template('tmpl/news/article.html');
+                    x.scope({
+                        prefix: '/modules/news',
+                        entity: 'article'
+                    });
+                    x.controller('NewsArticleController');
+                }
             };
+            
+            router.when('/modules/news', routes.categories);
+            router.when('/content/news', function(x){
+                routes.categories(x);
+                x.scope({
+                    prefix: '/content/news'
+                });
+            });
 
-            var getArticlesOptions = function (definition) {
+            router.when('/modules/news/settings', routes.settings);
 
-                var obj = {};
-                $.extend(true, obj, {
-                    baseTemplateUrl: 'tmpl/core/base/list.html',
-                    templateUrl: 'tmpl/news/articles.html',
-                    controller: 'NewsArticlesController',
-                    location: {
-                        prefix: '/modules/news'
-                    }
-                }, definition);
+            router.when('/modules/news/articles/:id', routes.articles);
+            router.when('/content/news/articles/:id', function(x){
+                routes.articles(x);
+                x.scope({
+                    prefix: '/content/news'
+                });
+            });
+            router.when('/content/nodes/news/articles/:id', function(x){
+                routes.articles(x);
+                x.scope({
+                    prefix: '/content/nodes/news'
+                });
+            });
 
-                return obj;
-            };
+            router.when('/modules/news/category/:id', routes.category);
+            router.when('/content/news/category/:id', function(x) {
+                routes.category(x);
+                x.scope({
+                    prefix: '/content/news'
+                });
+            });
 
-            var getCategoryOptions = function (definition) {
+            router.when('/content/nodes/news/category/:id', function (x) {
+                routes.category(x);
+                x.scope({
+                    prefix: '/content/nodes/news'
+                });
+            });
 
-                var obj = {};
-                $.extend(true, obj, {
-                    controller: 'NewsCategoryController',
-                    baseTemplateUrl: 'tmpl/core/base/node.html',
-                    templateUrl: 'tmpl/news/category.html',
-                    section: 'news',
-                    domain: 'news',
-                    entity: 'articleList',
-                    location: {
-                        prefix: '/modules/news'
-                    }
-                }, definition);
+            router.when('/modules/news/article/:id', routes.article)
+            router.when('/content/news/article/:id', function (x) {
+                routes.article(x);
+                x.scope({
+                    prefix: '/content/news'
+                });
+            });
+            router.when('/content/nodes/news/article/:id', function (x) {
+                routes.article(x);
+                x.scope({
+                    prefix: '/content/nodes/news'
+                });
+            });
 
-                return obj;
-            };
-
-            var getArticleOptions = function (definition) {
-
-                var obj = {};
-                $.extend(true, obj, {
-                    controller: 'NewsArticleController',
-                    baseTemplateUrl: 'tmpl/core/base/node.html',
-                    templateUrl: 'tmpl/news/article.html',
-                    section: 'news',
-                    domain: 'news',
-                    entity: 'article',
-                    location: {
-                        prefix: '/modules/news'
-                    }
-                }, definition);
-
-                return obj;
-            };
-
-            router
-                .when('/modules/news', getCategoriesOptions())
-                .when('/content/news', getCategoriesOptions({
-                    location: {
-                        prefix: '/content/news'
-                    }
-                }))
-
-                .when('/modules/news/settings', getSettingsOptions())
-
-                .when('/modules/news/articles/:id', getArticlesOptions())
-                .when('/content/news/articles/:id', getArticlesOptions({
-                    location: {
-                        prefix: '/content/news'
-                    }
-                }))
-                .when('/content/nodes/news/articles/:id', getArticlesOptions({
-                    location: {
-                        prefix: '/content/nodes/news'
-                    }
-                }))
-
-                .when('/modules/news/category/:id', getCategoryOptions())
-                .when('/content/news/category/:id', getCategoryOptions({
-                    location: {
-                        prefix: '/content/news'
-                    }
-                }))
-                .when('/content/nodes/news/category/:id', getCategoryOptions({
-                    location: {
-                        prefix: '/content/nodes/news'
-                    }
-                }))
-
-                .when('/modules/news/article/:id', getArticleOptions())
-                .when('/content/news/article/:id', getArticleOptions({
-                    location: {
-                        prefix: '/content/news'
-                    }
-                }))
-                .when('/content/nodes/news/article/:id', getArticleOptions({
-                    location: {
-                        prefix: '/content/nodes/news'
-                    }
-                }));
         }]);
 })();
