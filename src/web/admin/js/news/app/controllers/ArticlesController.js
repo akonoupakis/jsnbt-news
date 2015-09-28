@@ -91,9 +91,17 @@
         
         $scope.gridFn = {
 
+            canEdit: function (article) {
+                return true;
+            },
+
             edit: function (article) {
                 var url = $jsnbt.entities[article.entity].getEditUrl(article, $scope.prefix);
                 $location.next(url);
+            },
+
+            canDelete: function (article) {
+                return true;
             },
 
             delete: function (article) {
