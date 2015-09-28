@@ -57,7 +57,7 @@
 
                 deferred.resolve();
             }, function (error) {
-                deferred.reject();
+                deferred.reject(error);
             });
 
             return deferred.promise;
