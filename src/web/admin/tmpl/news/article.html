@@ -9,7 +9,7 @@
     <ctrl-image class="col-md-6" ng-model="node.content.image" ng-height="imageSize.body.height" ng-width="imageSize.body.width" ng-tip="{{imageTip.body}}" ng-required="true" ng-label="body image"></ctrl-image>
 </div>
 <div class="row" id="page-content-teaser" data-scrollspy="teaser">
-    <ctrl-text-area class="col-md-12" ng-model="node.content.localized[language].teaser" ng-validating="node.active[language]" ng-required="true" ng-rows="5" ng-label="teaser"></ctrl-text-area>
+    <ctrl-html class="col-md-12" ng-model="node.content.localized[language].teaser" ng-height="200" ng-validating="node.active[language]" ng-required="true" ng-label="teaser"></ctrl-html>
 </div>
 <div class="row" id="page-content-body" data-scrollspy="body">
     <ctrl-html class="col-md-12" ng-model="node.content.localized[language].body" ng-height="200" ng-max-height="400" ng-validating="node.active[language]" ng-required="true" ng-label="body"></ctrl-html>
