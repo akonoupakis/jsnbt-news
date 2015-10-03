@@ -60,7 +60,7 @@
 
             var TEMPLATE_BASE = jsnbt.constants.TEMPLATE_BASE;
 
-            var router = new jsnbt.router('news', $routeProvider);
+            var router = new jsnbt.ViewRouter('news', $routeProvider);
 
             var routes = {
                 categories: function (x) {
