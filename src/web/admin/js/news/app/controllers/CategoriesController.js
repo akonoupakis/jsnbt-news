@@ -2,7 +2,7 @@
     "use strict";
     
     jsnbt.NewsCategoriesController = function ($scope, $route, $rootScope, $location, $data, $jsnbt, $logger, ModalService) {
-        jsnbt.TreeControllerBase.apply(this, $scope.getBaseArguments($scope));
+        jsnbt.controllers.TreeControllerBase.apply(this, $scope.getBaseArguments($scope));
 
         var logger = $logger.create('NewsCategoriesController');
         
@@ -112,7 +112,7 @@
         });
 
     };
-    jsnbt.NewsCategoriesController.prototype = Object.create(jsnbt.TreeControllerBase.prototype);
+    jsnbt.NewsCategoriesController.prototype = Object.create(jsnbt.controllers.TreeControllerBase.prototype);
 
     angular.module("jsnbt-news")
         .controller('NewsCategoriesController', ['$scope', '$route', '$rootScope', '$location', '$data', '$jsnbt', '$logger', 'ModalService', jsnbt.NewsCategoriesController]);

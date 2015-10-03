@@ -2,7 +2,7 @@
     "use strict";
 
     var NewsCategoryController = function ($scope, $route, $rootScope, $location, $q, $data, $logger) {
-        jsnbt.NodeFormControllerBase.apply(this, $scope.getBaseArguments($scope));
+        jsnbt.controllers.NodeFormControllerBase.apply(this, $scope.getBaseArguments($scope));
 
         var logger = $logger.create('NewsCategoryController');
 
@@ -139,7 +139,7 @@
             logger.error(ex);
         });
     };
-    NewsCategoryController.prototype = Object.create(jsnbt.NodeFormControllerBase.prototype);
+    NewsCategoryController.prototype = Object.create(jsnbt.controllers.NodeFormControllerBase.prototype);
 
     angular.module("jsnbt-news")
         .controller('NewsCategoryController', ['$scope', '$route', '$rootScope', '$location', '$q', '$data', '$logger', NewsCategoryController]);

@@ -2,7 +2,7 @@
     "use strict";
 
     var NewsSettingsController = function ($scope, $route, $location, $jsnbt, $logger) {
-        jsnbt.SettingsControllerBase.apply(this, $scope.getBaseArguments($scope));
+        jsnbt.controllers.SettingsControllerBase.apply(this, $scope.getBaseArguments($scope));
 
         var logger = $logger.create('NewsSettingsController');
 
@@ -30,7 +30,7 @@
             logger.error(ex);
         });
     };
-    NewsSettingsController.prototype = Object.create(jsnbt.SettingsControllerBase.prototype);
+    NewsSettingsController.prototype = Object.create(jsnbt.controllers.SettingsControllerBase.prototype);
 
     angular.module("jsnbt-news")
         .controller('NewsSettingsController', ['$scope', '$route', '$location', '$jsnbt', '$logger', NewsSettingsController]);
