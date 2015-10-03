@@ -1,8 +1,8 @@
 ﻿;(function () {
     "use strict";
 
-    var NewsArticlesController = function ($scope, $route, $rootScope, $routeParams, $location, $q, $logger, $data, $jsnbt, LocationService, PagedDataService, ModalService) {
-        jsnbt.controllers.ListControllerBase.apply(this, $scope.getBaseArguments($scope));
+    var NewsArticlesController = function ($scope, $rootScope, $route, $routeParams, $location, $q, $logger, $data, $jsnbt, LocationService, PagedDataService, ModalService) {
+        jsnbt.controllers.ListControllerBase.apply(this, $rootScope.getBaseArguments($scope));
 
         var logger = $logger.create('NewsArticlesController');
 
@@ -147,5 +147,5 @@
     NewsArticlesController.prototype = Object.create(jsnbt.controllers.ListControllerBase.prototype);
 
     angular.module("jsnbt-news")
-        .controller('NewsArticlesController', ['$scope', '$route', '$rootScope', '$routeParams', '$location', '$q', '$logger', '$data', '$jsnbt', 'LocationService', 'PagedDataService', 'ModalService', NewsArticlesController]);
+        .controller('NewsArticlesController', ['$scope', '$rootScope', '$route', '$routeParams', '$location', '$q', '$logger', '$data', '$jsnbt', 'LocationService', 'PagedDataService', 'ModalService', NewsArticlesController]);
 })();

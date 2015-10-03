@@ -1,8 +1,8 @@
 ﻿;(function () {
     "use strict";
 
-    var NewsSettingsController = function ($scope, $route, $location, $jsnbt, $logger) {
-        jsnbt.controllers.SettingsControllerBase.apply(this, $scope.getBaseArguments($scope));
+    var NewsSettingsController = function ($scope, $rootScope, $route, $location, $jsnbt, $logger) {
+        jsnbt.controllers.SettingsControllerBase.apply(this, $rootScope.getBaseArguments($scope));
 
         var logger = $logger.create('NewsSettingsController');
 
@@ -33,6 +33,6 @@
     NewsSettingsController.prototype = Object.create(jsnbt.controllers.SettingsControllerBase.prototype);
 
     angular.module("jsnbt-news")
-        .controller('NewsSettingsController', ['$scope', '$route', '$location', '$jsnbt', '$logger', NewsSettingsController]);
+        .controller('NewsSettingsController', ['$scope', '$rootScope', '$route', '$location', '$jsnbt', '$logger', NewsSettingsController]);
 
 })();

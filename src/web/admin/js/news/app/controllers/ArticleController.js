@@ -1,8 +1,8 @@
 ﻿;(function () {
     "use strict";
 
-    var NewsArticleController = function ($scope, $route, $rootScope, $location, $q, $data, $logger) {
-        jsnbt.controllers.NodeFormControllerBase.apply(this, $scope.getBaseArguments($scope));
+    var NewsArticleController = function ($scope, $rootScope, $route, $location, $q, $data, $logger) {
+        jsnbt.controllers.NodeFormControllerBase.apply(this, $rootScope.getBaseArguments($scope));
 
         var logger = $logger.create('NewsArticleController');
 
@@ -102,6 +102,6 @@
     NewsArticleController.prototype = Object.create(jsnbt.controllers.NodeFormControllerBase.prototype);
 
     angular.module("jsnbt-news")
-        .controller('NewsArticleController', ['$scope', '$route', '$rootScope', '$location', '$q', '$data', '$logger', NewsArticleController]);
+        .controller('NewsArticleController', ['$scope', '$rootScope', '$route', '$location', '$q', '$data', '$logger', NewsArticleController]);
 
 })();
