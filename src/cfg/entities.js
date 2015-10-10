@@ -1,6 +1,7 @@
 module.exports = [{
     name: 'articleList',
     allowed: ['articleList', 'article'],
+    pointed: true,
     properties: {
         meta: false
     }

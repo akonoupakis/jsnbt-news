@@ -4,6 +4,8 @@
     jsnbt.NewsCategoriesController = function ($scope, $rootScope, $route, $location, $data, $jsnbt, $logger, ModalService) {
         jsnbt.controllers.TreeControllerBase.apply(this, $rootScope.getBaseArguments($scope));
 
+        var self = this;
+
         var logger = $logger.create('NewsCategoriesController');
         
         $scope.canViewSettings = function () {
@@ -92,7 +94,7 @@
                         }).then(function (result) {
                             if (result) {
                                 $data.nodes.del(node.id).then(function (nodeDeleteResults) {
-                                    $scope.remove(node);
+                                    self.remove(node);
                                 }, function (nodeDeleteError) {
                                     deferred.reject(nodeDeleteError);
                                 });
@@ -107,7 +109,7 @@
 
         };
 
-        $scope.init().catch(function (ex) {
+        this.init().catch(function (ex) {
             logger.error(ex);
         });
 
