@@ -64,10 +64,8 @@
                 var deletePromise = function (data) {
                     var deferred = $q.defer();
 
-                    ModalService.open({
-                        title: 'are you sure you want to delete the article ' + data.name + '?',
-                        controller: 'DeletePromptController',
-                        template: 'tmpl/core/modals/deletePrompt.html'
+                    ModalService.confirm(function (x) {
+                        x.title('are you sure you want to delete the article ' + data.name + '?');
                     }).then(function (confirmed) {
                         if (confirmed) {
                             $data.nodes.get(data.id).then(function (response) {
