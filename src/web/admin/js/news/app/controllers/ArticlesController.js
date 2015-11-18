@@ -1,7 +1,7 @@
 ﻿;(function () {
     "use strict";
 
-    var NewsArticlesController = function ($scope, $rootScope, $route, $routeParams, $location, $q, $logger, $data, $jsnbt, LocationService, PagedDataService, ModalService) {
+    var NewsArticlesController = function ($scope, $rootScope, $route, $routeParams, $location, $q, $logger, $data, $jsnbt, LocationService, PagedDataService, ModalService, AuthService) {
         jsnbt.controllers.ListControllerBase.apply(this, $rootScope.getBaseArguments($scope));
 
         var self = this;
@@ -36,7 +36,7 @@
         });
 
         $scope.canCreate = function () {
-            return true;
+            return AuthService.isAuthorized($scope.current.user, 'nodes:article', 'C');
         };
 
         $scope.create = function () {
@@ -47,7 +47,7 @@
         $scope.gridFn = {
 
             canEdit: function (article) {
-                return true;
+                return AuthService.isAuthorized($scope.current.user, 'nodes:article', 'U');
             },
 
             edit: function (article) {
@@ -56,7 +56,7 @@
             },
 
             canDelete: function (article) {
-                return true;
+                return AuthService.isAuthorized($scope.current.user, 'nodes:article', 'D');
             },
 
             delete: function (article) {
@@ -151,5 +151,5 @@
 
 
     angular.module("jsnbt-news")
-        .controller('NewsArticlesController', ['$scope', '$rootScope', '$route', '$routeParams', '$location', '$q', '$logger', '$data', '$jsnbt', 'LocationService', 'PagedDataService', 'ModalService', NewsArticlesController]);
+        .controller('NewsArticlesController', ['$scope', '$rootScope', '$route', '$routeParams', '$location', '$q', '$logger', '$data', '$jsnbt', 'LocationService', 'PagedDataService', 'ModalService', 'AuthService', NewsArticlesController]);
 })();

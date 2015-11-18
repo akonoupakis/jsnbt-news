@@ -1,7 +1,7 @@
 ﻿;(function () {
     "use strict";
     
-    jsnbt.NewsCategoriesController = function ($scope, $rootScope, $route, $location, $data, $jsnbt, $logger, ModalService) {
+    jsnbt.NewsCategoriesController = function ($scope, $rootScope, $route, $location, $data, $jsnbt, $logger, ModalService, AuthService) {
         jsnbt.controllers.TreeControllerBase.apply(this, $rootScope.getBaseArguments($scope));
 
         var self = this;
@@ -9,7 +9,7 @@
         var logger = $logger.create('NewsCategoriesController');
         
         $scope.canViewSettings = function () {
-            return $scope.prefix === '/modules/news';
+            return $scope.prefix === '/modules/news' && AuthService.isInRole($scope.current.user, 'sa');
         };
 
 
@@ -18,7 +18,7 @@
         };
 
         $scope.canCreate = function () {
-            return true;
+            return AuthService.isAuthorized($scope.current.user, 'nodes:articleList', 'C');
         };
 
 
@@ -30,7 +30,7 @@
         $scope.treeFn = {
 
             canOpen: function (node) {
-                return true;
+                return AuthService.isAuthorized($scope.current.user, 'nodes:' + node.entity, 'R');
             },
 
             open: function (node) {
@@ -39,7 +39,7 @@
             },
 
             canCreate: function (node) {
-                return true;
+                return AuthService.isAuthorized($scope.current.user, 'nodes:' + node.entity, 'C');
             },
 
             create: function (node) {
@@ -48,7 +48,7 @@
             },
 
             canEdit: function (node) {
-                return true;
+                return AuthService.isAuthorized($scope.current.user, 'nodes:' + node.entity, 'U');
             },
 
             edit: function (node) {
@@ -57,7 +57,7 @@
             },
 
             canDelete: function (node) {
-                return true;
+                return AuthService.isAuthorized($scope.current.user, 'nodes:' + node.entity, 'D');
             },
 
             delete: function (node) {
@@ -111,5 +111,5 @@
     jsnbt.NewsCategoriesController.prototype = Object.create(jsnbt.controllers.TreeControllerBase.prototype);
 
     angular.module("jsnbt-news")
-        .controller('NewsCategoriesController', ['$scope', '$rootScope', '$route', '$location', '$data', '$jsnbt', '$logger', 'ModalService', jsnbt.NewsCategoriesController]);
+        .controller('NewsCategoriesController', ['$scope', '$rootScope', '$route', '$location', '$data', '$jsnbt', '$logger', 'ModalService', 'AuthService', jsnbt.NewsCategoriesController]);
 })();
