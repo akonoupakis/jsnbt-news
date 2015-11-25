@@ -27,7 +27,7 @@
             gallery: undefined
         };
 
-        this.enqueue('preloading', function () {
+        this.enqueue('preloading', '', function () {
             var deferred = $q.defer();
 
             $data.settings.get({

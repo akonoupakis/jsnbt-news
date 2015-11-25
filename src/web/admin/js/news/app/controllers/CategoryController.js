@@ -11,7 +11,7 @@
         $scope.values.articleTemplate = '';
         $scope.draftValues.articleTemplate = '';
          
-        this.enqueue('set', function () {
+        this.enqueue('set', '', function () {
             var deferred = $q.defer();
 
             if (!self.isNew()) {
@@ -24,7 +24,7 @@
             return deferred.promise;
         });
 
-        this.enqueue('set', function () {
+        this.enqueue('set', '', function () {
             var deferred = $q.defer();
 
             self.setSelectedArticleTemplate().then(function () {
@@ -36,7 +36,7 @@
             return deferred.promise;
         });
 
-        this.enqueue('publishing', function (node) {
+        this.enqueue('publishing', '', function (node) {
             var deferred = $q.defer();
 
             if (!node.content.articleTemplate)
@@ -49,7 +49,7 @@
             return deferred.promise;
         });
                
-        this.enqueue('watch', function () {
+        this.enqueue('watch', '', function () {
             var deferred = $q.defer();
 
             $scope.$watch('node.content.articleTemplate.inherits', function (newValue, prevValue) {

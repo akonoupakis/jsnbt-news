@@ -15,7 +15,7 @@
 
         $scope.offset = _.str.trim($scope.prefix || '', '/').split('/').length;
 
-        this.enqueue('loading', function () {
+        this.enqueue('loading', '', function () {
             var deferred = $q.defer();
 
             $data.nodes.get($scope.id).then(function (response) {
