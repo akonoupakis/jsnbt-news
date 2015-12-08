@@ -15,8 +15,8 @@
             var deferred = $q.defer();
 
             if (!self.isNew()) {
-                $scope.values.articleTemplate = $scope.node.content.articleTemplate ? ($scope.node.content.articleTemplate.value || '') : '';
-                $scope.draftValues.articleTemplate = $scope.node.content.articleTemplate ? ($scope.node.content.articleTemplate.value || '') : '';
+                $scope.values.articleTemplate = $scope.model.content.articleTemplate ? ($scope.model.content.articleTemplate.value || '') : '';
+                $scope.draftValues.articleTemplate = $scope.model.content.articleTemplate ? ($scope.model.content.articleTemplate.value || '') : '';
             }
 
             deferred.resolve();
@@ -122,19 +122,19 @@
 
         var self = this;
 
-        if (!this.scope.node.content.articleTemplate) {
-            this.scope.node.content.articleTemplate = {
+        if (!this.scope.model.content.articleTemplate) {
+            this.scope.model.content.articleTemplate = {
                 value: '',
                 inherits: false
             }
         }
 
-        if (this.scope.node.content.articleTemplate.inherits) {
+        if (this.scope.model.content.articleTemplate.inherits) {
             this.scope.draftValues.articleTemplate = this.scope.values.articleTemplate;
 
             var template = '';
 
-            $(self.scope.node.hierarchy).each(function (i, item) {
+            $(self.scope.model.hierarchy).each(function (i, item) {
                 var matchedNode = _.first(_.filter(self.scope.nodes, function (x) { return x.id === item; }));
                 if (matchedNode) {
                     if (matchedNode.content.articleTemplate && !matchedNode.content.articleTemplate.inherits) {
