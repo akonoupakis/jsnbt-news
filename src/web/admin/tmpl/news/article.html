@@ -1,19 +1,19 @@
 ﻿<div class="row" id="page-content-title" data-scrollspy="title">
-    <ctrl-text class="col-sm-6" ng-model="node.title[language]" ng-validating="node.active[language]" ng-required="true" ng-label="title"></ctrl-text>
-    <ctrl-date-picker class="col-sm-4" ng-model="node.content.date" ng-required="true" ng-label="date"></ctrl-date-picker>
+    <ctrl-text class="col-sm-6" ng-model="model.title[language]" ng-validating="model.active[language]" ng-required="true" ng-label="title"></ctrl-text>
+    <ctrl-date-picker class="col-sm-4" ng-model="model.content.date" ng-required="true" ng-label="date"></ctrl-date-picker>
     
-    <ctrl-check class="col-sm-2" ng-model="node.active[language]" ng-label="active"></ctrl-check>
+    <ctrl-check class="col-sm-2" ng-model="model.active[language]" ng-label="active"></ctrl-check>
 </div>
 <div class="row" id="page-content-images" data-scrollspy="images">
-    <ctrl-image class="col-sm-6" ng-model="node.content.teaserImage" ng-height="imageSize.teaser.height" ng-width="imageSize.teaser.width" ng-tip="{{imageTip.teaser}}" ng-required="true" ng-label="teaser image"></ctrl-image>
-    <ctrl-image class="col-sm-6" ng-model="node.content.image" ng-height="imageSize.body.height" ng-width="imageSize.body.width" ng-tip="{{imageTip.body}}" ng-required="true" ng-label="body image"></ctrl-image>
+    <ctrl-image class="col-sm-6" ng-model="model.content.teaserImage" ng-height="imageSize.teaser.height" ng-width="imageSize.teaser.width" ng-tip="{{imageTip.teaser}}" ng-required="true" ng-label="teaser image"></ctrl-image>
+    <ctrl-image class="col-sm-6" ng-model="model.content.image" ng-height="imageSize.body.height" ng-width="imageSize.body.width" ng-tip="{{imageTip.body}}" ng-required="true" ng-label="body image"></ctrl-image>
 </div>
 <div class="row" id="page-content-teaser" data-scrollspy="teaser">
-    <ctrl-html class="col-sm-12" ng-model="node.content.localized[language].teaser" ng-height="200" ng-validating="node.active[language]" ng-required="true" ng-label="teaser"></ctrl-html>
+    <ctrl-html class="col-sm-12" ng-model="model.content.localized[language].teaser" ng-height="200" ng-validating="model.active[language]" ng-required="true" ng-label="teaser"></ctrl-html>
 </div>
 <div class="row" id="page-content-body" data-scrollspy="body">
-    <ctrl-html class="col-sm-12" ng-model="node.content.localized[language].body" ng-height="200" ng-max-height="400" ng-validating="node.active[language]" ng-required="true" ng-label="body"></ctrl-html>
+    <ctrl-html class="col-sm-12" ng-model="model.content.localized[language].body" ng-height="200" ng-max-height="400" ng-validating="model.active[language]" ng-required="true" ng-label="body"></ctrl-html>
 </div>
 <div class="row" id="page-content-gallery" data-scrollspy="gallery">
-    <ctrl-image-list class="col-sm-12" ng-height="imageSize.gallery.height" ng-width="imageSize.gallery.width" ng-tip="{{imageTip.gallery}}" ng-model="node.content.gallery" ng-extensions="['.png', '.jpg', 'jpeg']" ng-label="gallery"></ctrl-image-list>
+    <ctrl-image-list class="col-sm-12" ng-height="imageSize.gallery.height" ng-width="imageSize.gallery.width" ng-tip="{{imageTip.gallery}}" ng-model="model.content.gallery" ng-extensions="['.png', '.jpg', 'jpeg']" ng-label="gallery"></ctrl-image-list>
 </div>
