@@ -30,16 +30,5 @@
     "parseUri": "1.2.3-2",
     "underscore": "1.6.0"
   },
-  "devDependencies": {
-    "grunt": "*",
-    "grunt-contrib-clean": "*",
-    "grunt-contrib-uglify": "*",
-    "grunt-contrib-jshint": "*",
-    "grunt-contrib-watch": "*",
-    "grunt-contrib-less": "*",
-    "grunt-contrib-cssmin": "*",
-    "grunt-contrib-copy": "*",
-    "grunt-preprocess": "*",
-    "grunt-env": "*"
-  }
+  "devDependencies": {}
 }
