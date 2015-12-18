@@ -24,13 +24,8 @@
   "files": [
     "src/app/**",
     "src/cfg/**",
-    "src/web/admin/**",
-    "scripts/**"
+    "src/web/**"
   ],
-  "scripts": {
-    "install": "node scripts/install.js",
-    "postuninstall": "node scripts/uninstall.js"
-  },
   "dependencies": {
     "parseUri": "1.2.3-2",
     "underscore": "1.6.0"
