@@ -122,6 +122,8 @@ module.exports = {
                                 if (uri.queryKey.aid) {
                                     getArticle(articleList.id, uri.queryKey.aid, function (article) {
                                         options.page = article;
+                                        options.nodes.push(articleList);
+                                        options.nodes.push(article);
                                         patchTemplate(articleList, options, function (options) {
                                             next(options);
                                         });
@@ -138,6 +140,7 @@ module.exports = {
                         if (uri.queryKey.aid) {                            
                             getArticle(lastNode.id, uri.queryKey.aid, function (article) {
                                 options.page = article;
+                                options.nodes.push(article);
                                 patchTemplate(lastNode, options, function (options) {
                                     next(options);
                                 });

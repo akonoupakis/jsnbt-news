@@ -1,4 +1,4 @@
-# jsnbt-blogs
+# jsnbt-news
 
 ## overview
 
