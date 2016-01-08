@@ -170,3 +170,5 @@ src/fetch.bat
 
 /*.sln
 /*.lnk
+publish.js
+publish.targets.json
