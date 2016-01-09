@@ -1,34 +1,34 @@
-﻿{
-  "name": "jsnbt-news",
-  "version": "1.0.121",
-  "description": "An articles addon for the jsnbt cms",
-  "keywords": [
-    "jsnbt",
-    "jsonbot"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "https://bitbucket.org/akonoupakis/jsnbt-news"
-  },
-  "bugs": {
-    "url": "https://bitbucket.org/akonoupakis/jsnbt-news/issues",
-    "email": "konoupakis@gmail.com"
-  },
-  "author": {
-    "name": "Apostolis Konoupakis",
-    "email": "konoupakis@gmail.com",
-    "url": ""
-  },
-  "config": {},
-  "main": "src/app/index.js",
-  "files": [
-    "src/app/**",
-    "src/cfg/**",
-    "src/web/**"
-  ],
-  "dependencies": {
-    "parseUri": "1.2.3-2",
-    "underscore": "1.6.0"
-  },
-  "devDependencies": {}
+{
+	"name": "jsnbt-news",
+	"version": "1.0.122-pre3",
+	"description": "An articles addon for the jsnbt cms",
+	"keywords": [
+		"jsnbt",
+		"jsonbot"
+	],
+	"repository": {
+		"type": "git",
+		"url": "https://bitbucket.org/akonoupakis/jsnbt-news"
+	},
+	"bugs": {
+		"url": "https://bitbucket.org/akonoupakis/jsnbt-news/issues",
+		"email": "konoupakis@gmail.com"
+	},
+	"author": {
+		"name": "Apostolis Konoupakis",
+		"email": "konoupakis@gmail.com",
+		"url": ""
+	},
+	"config": {},
+	"main": "src/app/index.js",
+	"files": [
+		"src/app/**",
+		"src/cfg/**",
+		"src/web/**"
+	],
+	"dependencies": {
+		"parseUri": "1.2.3-2",
+		"underscore": "1.6.0"
+	},
+	"devDependencies": {}
 }
