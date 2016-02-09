@@ -102,11 +102,14 @@
     NewsArticlesController.prototype.load = function () {
         var deferred = this.ctor.$q.defer();
 
-        this.ctor.PagedDataService.get(this.ctor.$jsnbt.db.nodes.get, {
-            parent: this.scope.id,
-            entity: 'article',
-            $sort: {
-                'content.date': -1
+        this.ctor.PagedDataService.get({
+            fn: this.ctor.$jsnbt.db.nodes.get,
+            query: {
+                parent: this.scope.id,
+                entity: 'article',
+                $sort: {
+                    'content.date': -1
+                }
             }
         }).then(function (response) {
             deferred.resolve(response);
