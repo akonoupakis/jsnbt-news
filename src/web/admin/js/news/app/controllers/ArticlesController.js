@@ -103,7 +103,7 @@
         var deferred = this.ctor.$q.defer();
 
         this.ctor.PagedDataService.get({
-            fn: this.ctor.$jsnbt.db.nodes.get,
+            fn: this.ctor.$jsnbt.db.nodes,
             query: {
                 parent: this.scope.id,
                 entity: 'article',
