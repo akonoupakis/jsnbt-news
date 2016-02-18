@@ -1,14 +1,14 @@
 ﻿;(function () {
     "use strict";
 
-    var NewsArticlesController = function ($scope, $rootScope, $route, $routeParams, $location, $q, $logger, $data, $jsnbt, LocationService, PagedDataService, ModalService, AuthService) {
+    var NewsArticlesController = function ($scope, $rootScope, $q, $logger, $data, $jsnbt, LocationService, PagedDataService, ModalService, AuthService) {
         jsnbt.controllers.ListControllerBase.apply(this, $rootScope.getBaseArguments($scope));
 
         var self = this;
 
         var logger = $logger.create('NewsArticlesController');
 
-        $scope.id = $routeParams.id;
+        $scope.id = $scope.route.current.params.id;
         $scope.parent = undefined;
         
         $scope.title = '';
@@ -41,7 +41,7 @@
 
         $scope.create = function () {
             var url = $jsnbt.entities['article'].getCreateUrl($scope.parent, $scope.prefix);
-            $location.next(url);
+            $scope.route.next(url);
         };
         
         $scope.gridFn = {
@@ -52,7 +52,7 @@
 
             edit: function (article) {
                 var url = $jsnbt.entities[article.entity].getEditUrl(article, $scope.prefix);
-                $location.next(url);
+                $scope.route.next(url);
             },
 
             canDelete: function (article) {
@@ -154,5 +154,5 @@
 
 
     angular.module("jsnbt-news")
-        .controller('NewsArticlesController', ['$scope', '$rootScope', '$route', '$routeParams', '$location', '$q', '$logger', '$data', '$jsnbt', 'LocationService', 'PagedDataService', 'ModalService', 'AuthService', NewsArticlesController]);
+        .controller('NewsArticlesController', ['$scope', '$rootScope', '$q', '$logger', '$data', '$jsnbt', 'LocationService', 'PagedDataService', 'ModalService', 'AuthService', NewsArticlesController]);
 })();
