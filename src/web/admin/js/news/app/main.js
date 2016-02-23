@@ -54,13 +54,12 @@
         throw new Error('na');
     };
 
-    angular.module("jsnbt-news", ['ngRoute'])
-    .config(['$routeProvider',
-        function ($routeProvider) {
+    angular.module("jsnbt-news", ['ngPathRouter'])
+    .config(['$routerProvider', function ($routerProvider) {
 
             var TEMPLATE_BASE = jsnbt.constants.TEMPLATE_BASE;
 
-            var router = new jsnbt.ViewRouter('news', $routeProvider);
+            var router = new jsnbt.ViewRouter('news', $routerProvider);
 
             var routes = {
                 categories: function (x) {

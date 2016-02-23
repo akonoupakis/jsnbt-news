@@ -1,7 +1,7 @@
 ﻿;(function () {
     "use strict";
     
-    jsnbt.NewsCategoriesController = function ($scope, $rootScope, $route, $location, $data, $jsnbt, $logger, ModalService, AuthService) {
+    jsnbt.NewsCategoriesController = function ($scope, $rootScope, $data, $jsnbt, $logger, ModalService, AuthService) {
         jsnbt.controllers.TreeControllerBase.apply(this, $rootScope.getBaseArguments($scope));
 
         var self = this;
@@ -14,7 +14,7 @@
 
 
         $scope.viewSettings = function () {
-            $location.next('/modules/news/settings');
+            $scope.route.next('/modules/news/settings');
         };
 
         $scope.canCreate = function () {
@@ -24,7 +24,7 @@
 
         $scope.create = function () {
             var url = $jsnbt.entities['articleList'].getCreateUrl(undefined, $scope.prefix);
-            $location.next(url);
+            $scope.route.next(url);
         };
 
         $scope.treeFn = {
@@ -35,7 +35,7 @@
 
             open: function (node) {
                 var url = $jsnbt.entities[node.entity].getViewUrl(node, $scope.prefix);
-                $location.next(url);
+                $scope.route.next(url);
             },
 
             canCreate: function (node) {
@@ -44,7 +44,7 @@
 
             create: function (node) {
                 var url = $jsnbt.entities['articleList'].getCreateUrl(node, $scope.prefix);
-                $location.next(url);
+                $scope.route.next(url);
             },
 
             canEdit: function (node) {
@@ -53,7 +53,7 @@
 
             edit: function (node) {
                 var url = $jsnbt.entities[node.entity].getEditUrl(node, $scope.prefix);
-                $location.next(url);
+                $scope.route.next(url);
             },
 
             canDelete: function (node) {
@@ -111,5 +111,5 @@
     jsnbt.NewsCategoriesController.prototype = Object.create(jsnbt.controllers.TreeControllerBase.prototype);
 
     angular.module("jsnbt-news")
-        .controller('NewsCategoriesController', ['$scope', '$rootScope', '$route', '$location', '$data', '$jsnbt', '$logger', 'ModalService', 'AuthService', jsnbt.NewsCategoriesController]);
+        .controller('NewsCategoriesController', ['$scope', '$rootScope', '$data', '$jsnbt', '$logger', 'ModalService', 'AuthService', jsnbt.NewsCategoriesController]);
 })();

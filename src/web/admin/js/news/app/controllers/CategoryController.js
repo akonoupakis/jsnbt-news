@@ -1,7 +1,7 @@
 ﻿;(function () {
     "use strict";
 
-    var NewsCategoryController = function ($scope, $rootScope, $route, $location, $q, $data, $logger) {
+    var NewsCategoryController = function ($scope, $rootScope, $q, $data, $logger) {
         jsnbt.controllers.NodeFormControllerBase.apply(this, $rootScope.getBaseArguments($scope));
 
         var self = this;
@@ -159,6 +159,6 @@
     };
 
     angular.module("jsnbt-news")
-        .controller('NewsCategoryController', ['$scope', '$rootScope', '$route', '$location', '$q', '$data', '$logger', NewsCategoryController]);
+        .controller('NewsCategoryController', ['$scope', '$rootScope', '$q', '$data', '$logger', NewsCategoryController]);
 
 })();
