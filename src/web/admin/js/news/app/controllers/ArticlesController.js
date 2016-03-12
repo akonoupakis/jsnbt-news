@@ -1,7 +1,9 @@
 ﻿;(function () {
     "use strict";
 
-    var NewsArticlesController = function ($scope, $rootScope, $q, $logger, $data, $jsnbt, LocationService, PagedDataService, ModalService, AuthService) {
+    var NewsArticlesController = function ($scope, $rootScope, $q, $logger, $data, $jsnbt, LocationService, ModalService, AuthService) {
+        $scope.selector = 'node';
+
         jsnbt.controllers.ListControllerBase.apply(this, $rootScope.getBaseArguments($scope));
 
         var self = this;
@@ -45,6 +47,17 @@
         };
         
         $scope.gridFn = {
+
+            load: function (filters, sorter) {
+                self.load(filters, sorter).then(function (response) {
+                    $scope.model = response;
+
+                    if ($scope.modal && $scope.modal.selector === $scope.selector)
+                        self.setSelected($scope.modal.selected);
+                }).catch(function (error) {
+                    throw error;
+                });
+            },
 
             canEdit: function (article) {
                 return AuthService.isAuthorized($scope.current.user, 'nodes:article', 'U');
@@ -99,18 +112,19 @@
     };
     NewsArticlesController.prototype = Object.create(jsnbt.controllers.ListControllerBase.prototype);
 
-    NewsArticlesController.prototype.load = function () {
+    NewsArticlesController.prototype.load = function (filters, sorter) {
         var deferred = this.ctor.$q.defer();
 
-        this.ctor.PagedDataService.get({
-            fn: this.ctor.$jsnbt.db.nodes,
+        this.ctor.$data.nodes.getPage({
             query: {
                 parent: this.scope.id,
                 entity: 'article',
                 $sort: {
                     'content.date': -1
                 }
-            }
+            },
+            filters: filters,
+            sorter: sorter
         }).then(function (response) {
             deferred.resolve(response);
         }, function (error) {
@@ -154,5 +168,5 @@
 
 
     angular.module("jsnbt-news")
-        .controller('NewsArticlesController', ['$scope', '$rootScope', '$q', '$logger', '$data', '$jsnbt', 'LocationService', 'PagedDataService', 'ModalService', 'AuthService', NewsArticlesController]);
+        .controller('NewsArticlesController', ['$scope', '$rootScope', '$q', '$logger', '$data', '$jsnbt', 'LocationService', 'ModalService', 'AuthService', NewsArticlesController]);
 })();
